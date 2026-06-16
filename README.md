@@ -68,7 +68,7 @@ backend/
 ### 1. Clone & Install
 
 ```bash
-git clone <your-repo-url>
+git clone (https://github.com/Yuvarajm-19/travel-itenerary)
 cd backend
 npm install
 ```
