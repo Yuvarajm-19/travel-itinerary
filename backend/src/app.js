@@ -24,17 +24,15 @@ const allowedOrigins = [
   'http://localhost:3000',
 ];
 
+app.use(helmet());
+
+console.log("CLIENT_URL =", process.env.CLIENT_URL);
+console.log("NODE_ENV =", process.env.NODE_ENV);
+
 app.use(
   cors({
-    origin: (origin, cb) => {
-      // Allow requests with no origin (e.g. curl, Postman, server-to-server)
-      if (!origin) return cb(null, true);
-      if (allowedOrigins.includes(origin)) return cb(null, true);
-      cb(new Error(`CORS: origin ${origin} is not allowed`));
-    },
+    origin: true,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
