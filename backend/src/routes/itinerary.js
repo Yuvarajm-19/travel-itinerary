@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const rateLimit = require('express-rate-limit');
 const { body } = require('express-validator');
 const {
   generate,
@@ -14,6 +15,18 @@ const { validate } = require('../middleware/validate');
 
 const router = Router();
 
+const aiGenerateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: parseInt(process.env.AI_GENERATE_LIMIT, 10) || 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => process.env.NODE_ENV !== 'production',
+  message: {
+    success: false,
+    message: `AI generation limit reached. You can generate up to ${process.env.AI_GENERATE_LIMIT || 50} itineraries per hour.`,
+  },
+});
+
 // ── Validation ────────────────────────────────────────────────────────────────
 const generateRules = [
   body('extractedData')
@@ -25,7 +38,7 @@ const generateRules = [
 ];
 
 // ── Protected routes ──────────────────────────────────────────────────────────
-router.post('/generate', protect, generateRules, validate, generate);
+router.post('/generate', protect, aiGenerateLimiter, generateRules, validate, generate);
 router.get('/',          protect,                           getAll);
 router.get('/stats',     protect,                           getStats);
 router.get('/:id',       protect,                           getOne);

@@ -39,31 +39,23 @@ app.use(
 );
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
-const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many requests, please try again later' },
-});
+const isDev = process.env.NODE_ENV !== 'production';
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: isDev ? 1000 : 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many auth attempts, please try again later' },
 });
 
-const generateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 20,
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: isDev ? 1000 : (parseInt(process.env.UPLOAD_LIMIT, 10) || 30),
   standardHeaders: true,
   legacyHeaders: false,
-  message: { success: false, message: 'AI generation limit reached, please try again in an hour' },
+  message: { success: false, message: 'Upload limit reached, please wait a few minutes.' },
 });
-
-app.use(globalLimiter);
 
 // ── Logging ───────────────────────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'test') {
@@ -110,8 +102,8 @@ app.get('/api', (req, res) => {
 
 // ── API routes ────────────────────────────────────────────────────────────────
 app.use('/api/auth',      authLimiter,     authRoutes);
-app.use('/api/upload',                     uploadRoutes);
-app.use('/api/itinerary', generateLimiter, itineraryRoutes);
+app.use('/api/upload',    uploadLimiter,   uploadRoutes);
+app.use('/api/itinerary',                     itineraryRoutes);
 app.use('/api/share',                      shareRoutes);
 
 // ── 404 & error handlers ──────────────────────────────────────────────────────
