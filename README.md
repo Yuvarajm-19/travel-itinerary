@@ -36,6 +36,7 @@ Fill in your `.env`:
 ```env
 MONGODB_URI=your_mongodb_atlas_uri
 JWT_SECRET=your_secret_key
+use openrouter incase you out of token
 GEMINI_API_KEY=your_gemini_api_key
 CLIENT_URL=http://localhost:5173
 ```
