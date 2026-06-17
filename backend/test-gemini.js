@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * Standalone Gemini API Test Script
- * Tests itinerary generation with sample data
+ * Standalone OpenRouter AI Test Script
+ * Tests itinerary generation with sample data via aiService
  * Usage: node test-gemini.js
  */
 
 require('dotenv').config();
-const { generateItinerary } = require('./src/services/geminiService');
+const { generateItinerary } = require('./src/services/aiService');
 
 const sampleExtractedData = [
   {
@@ -69,16 +69,16 @@ const log = (level, message, data = '') => {
 
 const main = async () => {
   try {
-    log('cyan', '🧳 Gemini Itinerary Generation Test');
+    log('cyan', '🧳 OpenRouter Itinerary Generation Test');
     log('cyan', '━'.repeat(70));
 
     // Validate API key
-    if (!process.env.GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY not set in .env file');
+    if (!process.env.OPENROUTER_API_KEY) {
+      throw new Error('OPENROUTER_API_KEY not set in .env file');
     }
 
-    log('green', '✓ GEMINI_API_KEY found');
-    log('gray', `  Key length: ${process.env.GEMINI_API_KEY.length} characters`);
+    log('green', '✓ OPENROUTER_API_KEY found');
+    log('gray', `  Key length: ${process.env.OPENROUTER_API_KEY.length} characters`);
     log('cyan', '');
 
     // Call generateItinerary

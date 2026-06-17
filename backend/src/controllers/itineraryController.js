@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
 const Itinerary = require('../models/Itinerary');
-const { generateItinerary } = require('../services/geminiService');
+const { generateItinerary } = require('../services/aiService');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
 
 // ── Generate ──────────────────────────────────────────────────────────────────
